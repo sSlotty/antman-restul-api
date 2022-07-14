@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/imroc/req/v3"
 	"net/http"
+	"os"
 )
 
 func GetCircuit(c *gin.Context) {
@@ -13,7 +14,9 @@ func GetCircuit(c *gin.Context) {
 
 	var antmanModel models.AntmanModel
 	client := req.C()
-	resp, err := client.R().Get("http://localhost:9200/antman-index-*/_search?size=1000&q=circuit:" + id)
+	var url = os.Getenv("URL_ES")
+
+	resp, err := client.R().Get(url + "/antman-index-*/_search?size=1000&q=circuit:" + id)
 
 	body := resp.String()
 	err = json.Unmarshal([]byte(body), &antmanModel)
