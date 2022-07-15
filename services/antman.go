@@ -20,12 +20,14 @@ func GetCircuit(c *gin.Context) {
 
 	body := resp.String()
 	err = json.Unmarshal([]byte(body), &antmanModel)
+
 	if err != nil {
 		c.JSON(500, gin.H{
 			"data": err.Error(),
 		})
 		return
 	}
+
 	painscore := 0
 	lowwifitxrx := 0
 	disconnect := 0
@@ -65,9 +67,11 @@ func GetCircuit(c *gin.Context) {
 		fiberflapping += antmanModel.Hits.Hits[i].Source.Fiberflapping
 		powerloss += antmanModel.Hits.Hits[i].Source.Powerloss
 	}
-
-	data := map[string]int{
-		"data_total":         len(antmanModel.Hits.Hits),
+	data := map[string]interface{}{
+		"circuit_detail": map[string]interface{}{
+			"data_total": len(antmanModel.Hits.Hits),
+			"circuit":    id,
+		},
 		"painscore":          painscore,
 		"lowwifitxrx":        lowwifitxrx,
 		"disconnect":         disconnect,
